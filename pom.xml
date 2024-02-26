@@ -32,16 +32,43 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- 嵌入式数据库引擎       -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
-<!-- database migration tool       -->
+        <!-- 数据库迁移工具      -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
             <version>5.2.4</version>
+        </dependency>
+        <!-- 自动生成getting方法和setting方法       -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.22</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- 实体映射工具       -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.4.2.Final</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>1.4.2.Final</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--创建用户随机生成ID -->
+        <dependency>
+            <groupId>com.github.ksuid</groupId>
+            <artifactId>ksuid</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
     <dependencyManagement>
@@ -84,6 +111,21 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+    <!--            flyway maven plugin-->
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>5.2.4</version>
+                <configuration>
+                    <user>root</user>
+                    <password>123456</password>
+                    <driver>com.mysql.cj.jdbc.Driver</driver>
+                    <url>jdbc:mysql://localhost:3308/ymx_project</url>
+                    <baselineOnMigrate>true</baselineOnMigrate>
+<!--                    //sql脚本位置，flyway会自动去找到这个目录并且执行里面的sql脚本-->
+                    <locations>classpath:db/migration/</locations>
+                </configuration>
             </plugin>
         </plugins>
     </build>
