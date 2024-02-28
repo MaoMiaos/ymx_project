@@ -70,6 +70,20 @@
             <artifactId>ksuid</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <!-- 处理excel文档       -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.41</version>
+        </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>

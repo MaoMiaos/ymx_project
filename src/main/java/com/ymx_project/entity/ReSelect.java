@@ -9,7 +9,7 @@ import java.util.Date;
 @Table(name = "re_select")
 public class ReSelect {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ASIN")
     private String asin;
 

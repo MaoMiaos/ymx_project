@@ -22,5 +22,6 @@ class AdminRepositoryTest {
         Admin saveadmin = adminRepository.save(admin);
         System.out.println(saveadmin.toString());
         adminRepository.findDistinctById("111");
+        System.out.println(new java.sql.Date(new java.util.Date().getTime()));
     }
 }

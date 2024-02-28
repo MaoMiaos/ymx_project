@@ -9,7 +9,7 @@ import java.util.Date;
 @Table(name = "forbid_goods")
 public class ForbidGoods {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ASIN")
     private String asin;
 
