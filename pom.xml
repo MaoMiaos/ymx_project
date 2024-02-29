@@ -83,6 +83,22 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.41</version>
         </dependency>
+        <!--JWT鉴权-->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+        <!--        //解决鉴权逻辑-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.7.3</version>
+        </dependency>
 
     </dependencies>
     <dependencyManagement>
@@ -115,7 +131,7 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.ymx_project.YmxProjectApplication</mainClass>
-                    <skip>true</skip>
+                    <skip>false</skip>
                 </configuration>
                 <executions>
                     <execution>
@@ -133,9 +149,9 @@
                 <version>5.2.4</version>
                 <configuration>
                     <user>root</user>
-                    <password>123456</password>
+                    <password>114114</password>
                     <driver>com.mysql.cj.jdbc.Driver</driver>
-                    <url>jdbc:mysql://localhost:3308/ymx_project</url>
+                    <url>jdbc:mysql://119.45.248.234:3306/ymx_project</url>
                     <baselineOnMigrate>true</baselineOnMigrate>
 <!--                    //sql脚本位置，flyway会自动去找到这个目录并且执行里面的sql脚本-->
                     <locations>classpath:db/migration/</locations>

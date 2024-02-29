@@ -2,33 +2,33 @@ package com.ymx_project.controller;
 
 
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.util.ListUtils;
+
 import com.alibaba.excel.util.MapUtils;
 import com.alibaba.fastjson.JSON;
 import com.ymx_project.Listener.UploadDataListener;
 import com.ymx_project.entity.NewCommodities;
 import com.ymx_project.repository.NewCommoditiesRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.annotation.MultipartConfig;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/hello")
 @CrossOrigin
+@RequiredArgsConstructor
 public class DefaultController {
 
     @GetMapping
-    public String hello(){
+    public String login(){
         return "hello";
     }
 
@@ -41,9 +41,7 @@ public class DefaultController {
      * <p>
      * 3. 直接写，这里注意，finish的时候会自动关闭OutputStream,当然你外面再关闭流问题不大
      */
-
-    @Autowired
-    private NewCommoditiesRepository newCommoditiesRepository;
+    private final NewCommoditiesRepository newCommoditiesRepository;
 
     @GetMapping("download")
     public void download(HttpServletResponse response) throws IOException, ParseException {
@@ -51,7 +49,7 @@ public class DefaultController {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setCharacterEncoding("utf-8");
         // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
-        String fileName = URLEncoder.encode("测试", "UTF-8").replaceAll("\\+", "%20");
+        String fileName = URLEncoder.encode("测试11", "UTF-8").replaceAll("\\+", "%20");
 
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
 
