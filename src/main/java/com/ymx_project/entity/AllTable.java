@@ -11,7 +11,7 @@ import java.util.Date;
 @Table(name = "all_table")
 public class AllTable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ASIN")
     private String asin;
 

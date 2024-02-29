@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "admin") // 指定表名
 public class Admin {
     @Id // 标识主键
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 主键生成策略
+//    @GeneratedValue(strategy = GenerationType.IDENTITY) // 主键生成策略
     @Column(name = "id") // 指定列名
     private String id;
 
