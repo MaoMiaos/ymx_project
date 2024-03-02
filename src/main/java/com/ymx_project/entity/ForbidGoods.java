@@ -36,4 +36,7 @@ public class ForbidGoods {
 
     @Column(name = "OUT_TYPE")
     private String outType;
+
+    @Column(name = "PICTURE_LINK")
+    private String picture_link;
 }

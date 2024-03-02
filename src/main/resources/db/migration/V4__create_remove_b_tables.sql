@@ -1,5 +1,5 @@
 -- B列淘汰表
-CREATE TABLE `remove_B` (
+CREATE TABLE `remove_b` (
                             `brand` VARCHAR(100) NOT NULL PRIMARY KEY UNIQUE COMMENT '品牌',
                             `ASIN` VARCHAR(50) COMMENT 'ASIN',
                             `ASIN_link` VARCHAR(100) COMMENT 'ASIN超链接',

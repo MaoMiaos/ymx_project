@@ -3,13 +3,14 @@ package com.ymx_project.controller;
 
 import com.alibaba.excel.EasyExcel;
 
+import com.alibaba.excel.enums.CellExtraTypeEnum;
 import com.alibaba.excel.util.MapUtils;
 import com.alibaba.fastjson.JSON;
-import com.ymx_project.Listener.UploadDataListener;
+import com.ymx_project.Listener.UploadNewDataListener;
 import com.ymx_project.entity.NewCommodities;
+import com.ymx_project.repository.CommoditiesTableRepository;
 import com.ymx_project.repository.NewCommoditiesRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,6 +43,7 @@ public class DefaultController {
      * 3. 直接写，这里注意，finish的时候会自动关闭OutputStream,当然你外面再关闭流问题不大
      */
     private final NewCommoditiesRepository newCommoditiesRepository;
+
 
     @GetMapping("download")
     public void download(HttpServletResponse response) throws IOException, ParseException {
@@ -83,7 +85,7 @@ public class DefaultController {
     /**
      * 文件上传
      * <p>1. 创建excel对应的实体对象 参照{@link NewCommodities}
-     * <p>2. 由于默认一行行的读取excel，所以需要创建excel一行一行的回调监听器，参照{@link UploadDataListener}
+     * <p>2. 由于默认一行行的读取excel，所以需要创建excel一行一行的回调监听器，参照{@link UploadNewDataListener}
      * <p>3. 直接读即可
      */
     @PostMapping("upload")
@@ -93,7 +95,14 @@ public class DefaultController {
             return "failure";
         }
         System.out.println("收到文件");
-        EasyExcel.read(file.getInputStream(), NewCommodities.class, new UploadDataListener(newCommoditiesRepository)).sheet().doRead();
+//        EasyExcel.read(file.getInputStream(), NewCommodities.class, new UploadDataListener(newCommoditiesRepository)).sheet().doRead();
+        EasyExcel.read(file.getInputStream(), NewCommodities.class, new UploadNewDataListener(newCommoditiesRepository))
+                // 需要读取批注 默认不读取
+                .extraRead(CellExtraTypeEnum.COMMENT)
+                // 需要读取超链接 默认不读取
+                .extraRead(CellExtraTypeEnum.HYPERLINK)
+                // 需要读取合并单元格信息 默认不读取
+                .extraRead(CellExtraTypeEnum.MERGE).sheet().doRead();
 
         return "console.log('success')";
     }

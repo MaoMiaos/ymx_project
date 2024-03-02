@@ -1,7 +1,10 @@
 package com.ymx_project.controller;
 
+import com.ymx_project.entity.AllTable;
+import com.ymx_project.service.AllTableService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,4 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RequiredArgsConstructor
 public class AllTableController {
+
+
+
 }

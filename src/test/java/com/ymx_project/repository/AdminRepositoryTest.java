@@ -17,7 +17,7 @@ class AdminRepositoryTest {
     void findDistinctById() {
         Admin admin = new Admin();
         admin.setId("111");
-        admin.setUserName("123");
+        admin.setUsername("123");
         admin.setPassword("1234");
         Admin saveadmin = adminRepository.save(admin);
         System.out.println(saveadmin.toString());

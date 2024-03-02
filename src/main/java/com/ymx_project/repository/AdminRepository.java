@@ -1,9 +1,11 @@
 package com.ymx_project.repository;
 
 import com.ymx_project.entity.Admin;
+import com.ymx_project.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 使用JpaRepository
@@ -15,4 +17,6 @@ import java.util.List;
 public interface AdminRepository extends JpaRepository<Admin,String> {
 
     List<Admin> findDistinctById(String id);
+
+    Optional<Admin> findByUsername(String username);
 }

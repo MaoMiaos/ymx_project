@@ -5,6 +5,8 @@ import com.ymx_project.entity.request.UserCreateRequest;
 import com.ymx_project.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public interface UserService {
 
@@ -13,4 +15,5 @@ public interface UserService {
 
     User readUserByUsername(String username);
 
+    Optional<User> check(User user);
 }

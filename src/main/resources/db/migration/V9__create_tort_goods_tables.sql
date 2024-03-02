@@ -8,5 +8,6 @@ CREATE TABLE `tort_goods` (
                               `height` VARCHAR(15) COMMENT '商品重量',
                               `FBA_value` VARCHAR(15) COMMENT 'FBA值',
                               `out_type` VARCHAR(15) COMMENT '淘汰原因',
+                              `picture_link` varchar(100) COMMENT '图片链接',
                               `create_data` DATE COMMENT '创建日期'
 ) COMMENT '侵权表';

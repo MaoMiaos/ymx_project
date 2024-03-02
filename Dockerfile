@@ -16,5 +16,5 @@ ADD target/ymx_project-0.0.1-SNAPSHOT.jar /app/ymx_project.jar
 #ENV PARAMS=""
 # 入口点， 执行JAVA运行命令
 
-EXPOSE 8080
+EXPOSE 8001
 ENTRYPOINT ["sh","-c","java -jar /app/ymx_project.jar"]

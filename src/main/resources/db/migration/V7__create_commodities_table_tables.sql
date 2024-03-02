@@ -7,5 +7,8 @@ CREATE TABLE `commodities_table` (
                                      `price` VARCHAR(20) COMMENT '商品价格',
                                      `height` VARCHAR(15) COMMENT '商品重量',
                                      `FBA_value` VARCHAR(15) COMMENT 'FBA值',
-                                     `create_data` DATE COMMENT '创建日期'
+                                     `create_data` DATE COMMENT '创建日期',
+                                     `picture_link` varchar(100) COMMENT '图片链接',
+                                     `user_id` varchar(50) comment '用户id'
+
 ) COMMENT '选品表';

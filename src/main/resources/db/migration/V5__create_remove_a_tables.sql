@@ -1,5 +1,5 @@
 -- A列淘汰表
-CREATE TABLE `remove_A` (
+CREATE TABLE `remove_a` (
                             `ASIN` VARCHAR(50) NOT NULL PRIMARY KEY COMMENT 'ASIN',
                             `brand` VARCHAR(100) NOT NULL COMMENT '品牌',
                             `ASIN_link` VARCHAR(100) COMMENT 'ASIN超链接',

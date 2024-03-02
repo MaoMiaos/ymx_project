@@ -1,18 +1,15 @@
 package com.ymx_project.Listener;
 
 import com.alibaba.excel.context.AnalysisContext;
-import com.alibaba.excel.enums.CellExtraTypeEnum;
 import com.alibaba.excel.metadata.CellExtra;
 import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.excel.util.ListUtils;
 import com.alibaba.fastjson.JSON;
 
-import com.ymx_project.entity.CommoditiesTable;
-import com.ymx_project.repository.CommoditiesTableRepository;
+import com.ymx_project.entity.NewCommodities;
 
-
+import com.ymx_project.repository.NewCommoditiesRepository;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.util.Assert;
 
 import java.util.Iterator;
@@ -25,26 +22,25 @@ import java.util.List;
  */
 // 有个很重要的点 DemoDataListener 不能被spring管理，要每次读取excel都要new,然后里面用到spring可以构造方法传进去
 @Slf4j
-public class UploadDataListener implements ReadListener<CommoditiesTable> {
-
+public class UploadNewDataListener implements ReadListener<NewCommodities> {
     /**
      * 每隔5条存储数据库，实际使用中可以100条，然后清理list ，方便内存回收
      */
     private static final int BATCH_COUNT = 100;
-    private List<CommoditiesTable> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+    private List<NewCommodities> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
     /**
      * 假设这个是一个DAO，当然有业务逻辑这个也可以是一个service。当然如果不用存储这个对象没用。
      */
-    private CommoditiesTableRepository commoditiesTableRepository;
+    private NewCommoditiesRepository newCommoditiesRepository;
 
 
     /**
      * 如果使用了spring,请使用这个构造方法。每次创建Listener的时候需要把spring管理的类传进来
      *
-     * @param commoditiesTableRepository
+     * @param newCommoditiesRepository
      */
-    public UploadDataListener(CommoditiesTableRepository commoditiesTableRepository) {
-        this.commoditiesTableRepository = commoditiesTableRepository;
+    public UploadNewDataListener(NewCommoditiesRepository newCommoditiesRepository) {
+        this.newCommoditiesRepository = newCommoditiesRepository;
     }
 
     /**
@@ -54,7 +50,7 @@ public class UploadDataListener implements ReadListener<CommoditiesTable> {
      * @param context
      */
     @Override
-    public void invoke(CommoditiesTable data, AnalysisContext context) {
+    public void invoke(NewCommodities data, AnalysisContext context) {
         log.info("解析到一条数据:{}", JSON.toJSONString(data));
         cachedDataList.add(data);
         // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
@@ -82,9 +78,9 @@ public class UploadDataListener implements ReadListener<CommoditiesTable> {
      */
     private void saveData() {
         log.info("{}条数据，开始存储数据库！", cachedDataList.size());
-        Iterator<CommoditiesTable> it = cachedDataList.iterator();
+        Iterator<NewCommodities> it = cachedDataList.iterator();
         while(it.hasNext()) {
-            commoditiesTableRepository.save(it.next());
+            newCommoditiesRepository.save(it.next());
         }
         log.info("存储数据库成功！");
     }
@@ -92,29 +88,33 @@ public class UploadDataListener implements ReadListener<CommoditiesTable> {
     @Override
     public void extra(CellExtra extra, AnalysisContext context) {
         log.info("读取到了一条额外信息:{}", JSON.toJSONString(extra));
-        if (extra.getType() == CellExtraTypeEnum.HYPERLINK){
-            log.info("读取到了一条额外信息:{}", JSON.toJSONString(extra));
-            if ("Sheet1!A1".equals(extra.getText())) {
-                log.info("额外信息是超链接,在rowIndex:{},columnIndex;{},内容是:{}", extra.getRowIndex(),
-                        extra.getColumnIndex(), extra.getText());
+        switch (extra.getType()) {
+            case HYPERLINK:
+                if ("Sheet1!A1".equals(extra.getText())) {
+                    log.info("额外信息是超链接,在rowIndex:{},columnIndex;{},内容是:{}", extra.getRowIndex(),
+                            extra.getColumnIndex(), extra.getText());
 
-            } else if ("Sheet2!A1".equals(extra.getText())) {
+                } else if ("Sheet2!A1".equals(extra.getText())) {
+                    log.info(
+                            "额外信息是超链接,而且覆盖了一个区间,在firstRowIndex:{},firstColumnIndex;{},lastRowIndex:{},lastColumnIndex:{},"
+                                    + "内容是:{}",
+                            extra.getFirstRowIndex(), extra.getFirstColumnIndex(), extra.getLastRowIndex(),
+                            extra.getLastColumnIndex(), extra.getText());
+                } else {
+                    Assert.hasLength("Unknown hyperlink!");
+                }
+                break;
+            case COMMENT:
+                log.info("额外信息是批注,在rowIndex:{},columnIndex;{},内容是:{}", extra.getRowIndex(), extra.getColumnIndex(),
+                        extra.getText());
+                break;
+            case MERGE:
                 log.info(
-                        "额外信息是超链接,而且覆盖了一个区间,在firstRowIndex:{},firstColumnIndex;{},lastRowIndex:{},lastColumnIndex:{},"
-                                + "内容是:{}",
+                        "额外信息是超链接,而且覆盖了一个区间,在firstRowIndex:{},firstColumnIndex;{},lastRowIndex:{},lastColumnIndex:{}",
                         extra.getFirstRowIndex(), extra.getFirstColumnIndex(), extra.getLastRowIndex(),
-                        extra.getLastColumnIndex(), extra.getText());
-            } else {
-                Assert.hasLength("Unknown hyperlink!");
-            }
-        }else if(extra.getType() == CellExtraTypeEnum.HYPERLINK){
-            log.info("额外信息是批注,在rowIndex:{},columnIndex;{},内容是:{}", extra.getRowIndex(), extra.getColumnIndex(),
-                    extra.getText());
-        }else if(extra.getType() == CellExtraTypeEnum.MERGE){
-            log.info(
-                    "额外信息是MERGE,而且覆盖了一个区间,在firstRowIndex:{},firstColumnIndex;{},lastRowIndex:{},lastColumnIndex:{}",
-                    extra.getFirstRowIndex(), extra.getFirstColumnIndex(), extra.getLastRowIndex(),
-                    extra.getLastColumnIndex());
+                        extra.getLastColumnIndex());
+                break;
+            default:
         }
     }
 
