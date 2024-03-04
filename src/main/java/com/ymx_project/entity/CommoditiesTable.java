@@ -1,4 +1,5 @@
 package com.ymx_project.entity;
+import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.ymx_project.util.CustomStringStringConverter;
 import lombok.Data;
@@ -11,48 +12,50 @@ import java.util.Date;
 @Table(name = "commodities_table")
 public class CommoditiesTable {
 
-    @Column(name = "PICTURE_LINK")
-    @ExcelProperty(index = 0)
-    private String picture_link;
-
-
     @Id
-    //    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ExcelProperty(index = 1,converter = CustomStringStringConverter.class)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ExcelProperty(index = 0,converter = CustomStringStringConverter.class)
     @Column(name = "ASIN")
     private String asin;
 
     @Column(name = "BRAND")
-    @ExcelProperty(index = 2)
+    @ExcelProperty(index = 1)
     private String brand;
 
-    @Column(name = "ASIN_LINK")
-    private String asinLink;
-
     @Column(name = "GOODS_TYPE")
-    @ExcelProperty(index = 3)
-        //    销量
+    @ExcelProperty(index = 2)
+    //    销量
     private String goodsType;
 
     @Column(name = "HEIGHT")
-    @ExcelProperty(index = 4)
+    @ExcelProperty(index = 3)
     private String height;
 
 
     @Column(name = "PRICE")
-    @ExcelProperty(index = 5)
+    @ExcelProperty(index = 4)
     private String price;
 
-
-
     @Column(name = "FBA_VALUE")
-    @ExcelProperty(index = 6)
+    @ExcelProperty(index = 5)
     private String fbaValue;
 
+    @Column(name = "PICTURE_LINK")
+    @ExcelProperty(index = 6)
+    private String picture_link;
+
+
+    @Column(name = "ASIN_LINK")
+    @ExcelIgnore
+    private String asinLink;
+
+
     @Column(name = "CREATE_DATA")
+    @ExcelIgnore
     private Date createData;
 
     @Column(name = "USER_ID")
+    @ExcelIgnore
     private String userId;
 
 

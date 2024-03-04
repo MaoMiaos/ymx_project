@@ -1,16 +1,20 @@
 package com.ymx_project.entity;
+
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.ymx_project.util.CustomStringStringConverter;
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "new_commodities")
-public class NewCommodities {
+@Table(name = "cheap_goods")
+public class CheapGoods {
     @Id
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @ExcelProperty(index = 0,converter = CustomStringStringConverter.class)
@@ -21,10 +25,10 @@ public class NewCommodities {
     @ExcelProperty(index = 1)
     private String brand;
 
-    @Column(name = "GOODS_TYPE")
+    @Column(name = "GOODS_COUNT")
     @ExcelProperty(index = 2)
     //    销量
-    private String goodsType;
+    private String goodsCount;
 
     @Column(name = "HEIGHT")
     @ExcelProperty(index = 3)
@@ -38,19 +42,17 @@ public class NewCommodities {
     @ExcelProperty(index = 5)
     private String fbaValue;
 
-    @Column(name = "pic_link")
+    @Column(name = "PICTURE_LINK")
     @ExcelProperty(index = 6)
     private String picture_link;
 
-    @Column(name = "ASIN_LINK")
-    @ExcelIgnore
-//    @ExcelProperty(index = 0,converter = CustomStringStringConverter.class)
-    private String asinLink;
-
     @Column(name = "CREATE_DATA")
     @ExcelIgnore
-//    @ExcelProperty(value = "创建日期",index = 7)
     private Date createData;
 
+
+    @Column(name = "ASIN_LINK")
+    @ExcelIgnore
+    private String asinLink;
 
 }

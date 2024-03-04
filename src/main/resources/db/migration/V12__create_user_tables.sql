@@ -1,0 +1,1 @@
+ALTER TABLE `user` add column role varchar(64) default null comment '角色' after `name`;

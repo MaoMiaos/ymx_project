@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class UserIdRequest {
-    @JsonProperty(value = "User_id")
+    @JsonProperty(value = "userId")
     private String userId;
 }

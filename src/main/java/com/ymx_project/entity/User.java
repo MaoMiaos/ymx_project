@@ -1,5 +1,6 @@
 package com.ymx_project.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -27,4 +28,6 @@ public class User {
     @Column(name = "name")
     private String name;
 
+   @Column(name = "role")
+    private String role;
 }

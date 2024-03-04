@@ -6,6 +6,7 @@ import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.excel.util.ListUtils;
 import com.alibaba.fastjson.JSON;
 
+import com.ymx_project.entity.CommoditiesTable;
 import com.ymx_project.entity.NewCommodities;
 
 import com.ymx_project.repository.NewCommoditiesRepository;
@@ -22,7 +23,10 @@ import java.util.List;
  */
 // 有个很重要的点 DemoDataListener 不能被spring管理，要每次读取excel都要new,然后里面用到spring可以构造方法传进去
 @Slf4j
-public class UploadNewDataListener implements ReadListener<NewCommodities> {
+public class UploadNewCommoditiesDataListener implements ReadListener<NewCommodities> {
+
+
+    private String asinToJavaData;
     /**
      * 每隔5条存储数据库，实际使用中可以100条，然后清理list ，方便内存回收
      */
@@ -39,7 +43,7 @@ public class UploadNewDataListener implements ReadListener<NewCommodities> {
      *
      * @param newCommoditiesRepository
      */
-    public UploadNewDataListener(NewCommoditiesRepository newCommoditiesRepository) {
+    public UploadNewCommoditiesDataListener(NewCommoditiesRepository newCommoditiesRepository) {
         this.newCommoditiesRepository = newCommoditiesRepository;
     }
 
@@ -77,10 +81,12 @@ public class UploadNewDataListener implements ReadListener<NewCommodities> {
      * 加上存储数据库
      */
     private void saveData() {
-        log.info("{}条数据，开始存储数据库！", cachedDataList.size());
+        log.info("NewCommodities{}条数据，开始存储数据库！", cachedDataList.size());
         Iterator<NewCommodities> it = cachedDataList.iterator();
         while(it.hasNext()) {
-            newCommoditiesRepository.save(it.next());
+            NewCommodities commoditiesTable = it.next();
+            commoditiesTable.setAsinLink(asinToJavaData);
+            newCommoditiesRepository.save(commoditiesTable);
         }
         log.info("存储数据库成功！");
     }
@@ -88,9 +94,10 @@ public class UploadNewDataListener implements ReadListener<NewCommodities> {
     @Override
     public void extra(CellExtra extra, AnalysisContext context) {
         log.info("读取到了一条额外信息:{}", JSON.toJSONString(extra));
+        asinToJavaData = extra.getText();
         switch (extra.getType()) {
             case HYPERLINK:
-                if ("Sheet1!A1".equals(extra.getText())) {
+                if (extra.getText().contains("http")) {
                     log.info("额外信息是超链接,在rowIndex:{},columnIndex;{},内容是:{}", extra.getRowIndex(),
                             extra.getColumnIndex(), extra.getText());
 

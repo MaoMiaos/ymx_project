@@ -10,9 +10,8 @@ import java.util.List;
 @Service
 public interface CommoditiesTableService {
 
-    List<CommoditiesTable> findAllByUserId(String userId);
 
-    CommoditiesTable getRandomData();
+    CommoditiesTable getRandomData(String userId);
 
     void addCommodities(CommoditiesTableRequest commoditiesTableRequest) throws ParseException;
 }

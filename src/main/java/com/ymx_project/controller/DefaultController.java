@@ -6,9 +6,8 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.enums.CellExtraTypeEnum;
 import com.alibaba.excel.util.MapUtils;
 import com.alibaba.fastjson.JSON;
-import com.ymx_project.Listener.UploadNewDataListener;
+import com.ymx_project.Listener.UploadNewCommoditiesDataListener;
 import com.ymx_project.entity.NewCommodities;
-import com.ymx_project.repository.CommoditiesTableRepository;
 import com.ymx_project.repository.NewCommoditiesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +57,8 @@ public class DefaultController {
         EasyExcel.write(response.getOutputStream(), NewCommodities.class).sheet("模板").doWrite(newCommoditiesRepository.findAll());
     }
 
-    @GetMapping("downloadFailedUsingJson")
+    @GetMapping("download1")
+
     public void downloadFailedUsingJson(HttpServletResponse response) throws IOException {
         // 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
         try {
@@ -69,12 +69,9 @@ public class DefaultController {
             response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
             // 这里需要设置不关闭流
             EasyExcel.write(response.getOutputStream(), NewCommodities.class).autoCloseStream(Boolean.FALSE).sheet("模板")
-                    .doWrite(newCommoditiesList());
+                    .doWrite(newCommoditiesRepository.findAll());
         } catch (Exception e) {
             // 重置response
-            response.reset();
-            response.setContentType("application/json");
-            response.setCharacterEncoding("utf-8");
             Map<String, String> map = MapUtils.newHashMap();
             map.put("status", "failure");
             map.put("message", "下载文件失败" + e.getMessage());
@@ -85,7 +82,7 @@ public class DefaultController {
     /**
      * 文件上传
      * <p>1. 创建excel对应的实体对象 参照{@link NewCommodities}
-     * <p>2. 由于默认一行行的读取excel，所以需要创建excel一行一行的回调监听器，参照{@link UploadNewDataListener}
+     * <p>2. 由于默认一行行的读取excel，所以需要创建excel一行一行的回调监听器，参照{@link UploadNewCommoditiesDataListener}
      * <p>3. 直接读即可
      */
     @PostMapping("upload")
@@ -96,7 +93,7 @@ public class DefaultController {
         }
         System.out.println("收到文件");
 //        EasyExcel.read(file.getInputStream(), NewCommodities.class, new UploadDataListener(newCommoditiesRepository)).sheet().doRead();
-        EasyExcel.read(file.getInputStream(), NewCommodities.class, new UploadNewDataListener(newCommoditiesRepository))
+        EasyExcel.read(file.getInputStream(), NewCommodities.class, new UploadNewCommoditiesDataListener(newCommoditiesRepository))
                 // 需要读取批注 默认不读取
                 .extraRead(CellExtraTypeEnum.COMMENT)
                 // 需要读取超链接 默认不读取
@@ -107,8 +104,4 @@ public class DefaultController {
         return "console.log('success')";
     }
 
-    private List<NewCommodities> newCommoditiesList() {
-        List<NewCommodities> list = newCommoditiesRepository.findAll();
-        return list;
-    }
 }

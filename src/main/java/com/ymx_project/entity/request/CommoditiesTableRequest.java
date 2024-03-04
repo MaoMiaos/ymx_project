@@ -20,7 +20,7 @@ public class CommoditiesTableRequest {
     private String height;
     @JsonProperty(value = "FBA_value")
     private String FBA_value;
-    @JsonProperty(value = "pic_link")
+    @JsonProperty(value = "picture_link")
     private String pic_link;
     @JsonProperty(value = "caigou_price")
     private String caigou_price;
@@ -32,7 +32,7 @@ public class CommoditiesTableRequest {
     private String huilv;
     @JsonProperty(value = "type")
     private String type;
-    @JsonProperty(value = "User_id")
+    @JsonProperty(value = "userId")
     private String User_id;
 }
 

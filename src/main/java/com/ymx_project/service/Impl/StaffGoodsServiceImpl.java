@@ -17,6 +17,7 @@ public class StaffGoodsServiceImpl implements StaffGoodsService {
     private final StaffGoodRepository staffGoodRepository;
 
     public List<StaffGoods> findAllByUserId(String userId){
+
         return staffGoodRepository.findAllByUserId(userId);
     }
 }

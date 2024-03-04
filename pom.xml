@@ -25,6 +25,7 @@
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
+<!--            <version>5.7</version>-->
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -152,7 +153,13 @@
                     <password>114114</password>
                     <driver>com.mysql.cj.jdbc.Driver</driver>
                     <url>jdbc:mysql://119.45.248.234:3306/ymx_project</url>
-                    <baselineOnMigrate>true</baselineOnMigrate>
+<!--                    <password>123456</password>-->
+<!--                    <driver>com.mysql.cj.jdbc.Driver</driver>-->
+<!--                    <url>jdbc:mysql://localhost:3308/ymx_project</url>-->
+<!--                    <password>root</password>-->
+<!--                    <driver>com.mysql.jdbc.Driver</driver>-->
+<!--                    <url>jdbc:mysql://localhost:3306/ymx_project</url>-->
+<!--                    <baselineOnMigrate>true</baselineOnMigrate>-->
 <!--                    //sql脚本位置，flyway会自动去找到这个目录并且执行里面的sql脚本-->
                     <locations>classpath:db/migration/</locations>
                 </configuration>
