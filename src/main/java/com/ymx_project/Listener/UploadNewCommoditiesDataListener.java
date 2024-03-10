@@ -55,13 +55,13 @@ public class UploadNewCommoditiesDataListener implements ReadListener<NewCommodi
      */
     @Override
     public void invoke(NewCommodities data, AnalysisContext context) {
-        log.info("解析到一条数据:{}", JSON.toJSONString(data));
+//        log.info("解析到一条数据:{}", JSON.toJSONString(data));
         cachedDataList.add(data);
         // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
         if (cachedDataList.size() >= BATCH_COUNT) {
             saveData();
             // 存储完成清理 list
-            cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+            cachedDataList.clear();
         }
     }
 
@@ -88,41 +88,41 @@ public class UploadNewCommoditiesDataListener implements ReadListener<NewCommodi
             commoditiesTable.setAsinLink(asinToJavaData);
             newCommoditiesRepository.save(commoditiesTable);
         }
-        log.info("存储数据库成功！");
+//        log.info("存储数据库成功！");
     }
 
     @Override
     public void extra(CellExtra extra, AnalysisContext context) {
-        log.info("读取到了一条额外信息:{}", JSON.toJSONString(extra));
-        asinToJavaData = extra.getText();
-        switch (extra.getType()) {
-            case HYPERLINK:
-                if (extra.getText().contains("http")) {
-                    log.info("额外信息是超链接,在rowIndex:{},columnIndex;{},内容是:{}", extra.getRowIndex(),
-                            extra.getColumnIndex(), extra.getText());
-
-                } else if ("Sheet2!A1".equals(extra.getText())) {
-                    log.info(
-                            "额外信息是超链接,而且覆盖了一个区间,在firstRowIndex:{},firstColumnIndex;{},lastRowIndex:{},lastColumnIndex:{},"
-                                    + "内容是:{}",
-                            extra.getFirstRowIndex(), extra.getFirstColumnIndex(), extra.getLastRowIndex(),
-                            extra.getLastColumnIndex(), extra.getText());
-                } else {
-                    Assert.hasLength("Unknown hyperlink!");
-                }
-                break;
-            case COMMENT:
-                log.info("额外信息是批注,在rowIndex:{},columnIndex;{},内容是:{}", extra.getRowIndex(), extra.getColumnIndex(),
-                        extra.getText());
-                break;
-            case MERGE:
-                log.info(
-                        "额外信息是超链接,而且覆盖了一个区间,在firstRowIndex:{},firstColumnIndex;{},lastRowIndex:{},lastColumnIndex:{}",
-                        extra.getFirstRowIndex(), extra.getFirstColumnIndex(), extra.getLastRowIndex(),
-                        extra.getLastColumnIndex());
-                break;
-            default:
-        }
+//        log.info("读取到了一条额外信息:{}", JSON.toJSONString(extra));
+//        asinToJavaData = extra.getText();
+//        switch (extra.getType()) {
+//            case HYPERLINK:
+//                if (extra.getText().contains("http")) {
+////                    log.info("额外信息是超链接,在rowIndex:{},columnIndex;{},内容是:{}", extra.getRowIndex(),
+//                            extra.getColumnIndex(), extra.getText());
+//
+//                } else if ("Sheet2!A1".equals(extra.getText())) {
+//                    log.info(
+//                            "额外信息是超链接,而且覆盖了一个区间,在firstRowIndex:{},firstColumnIndex;{},lastRowIndex:{},lastColumnIndex:{},"
+//                                    + "内容是:{}",
+//                            extra.getFirstRowIndex(), extra.getFirstColumnIndex(), extra.getLastRowIndex(),
+//                            extra.getLastColumnIndex(), extra.getText());
+//                } else {
+//                    Assert.hasLength("Unknown hyperlink!");
+//                }
+//                break;
+//            case COMMENT:
+//                log.info("额外信息是批注,在rowIndex:{},columnIndex;{},内容是:{}", extra.getRowIndex(), extra.getColumnIndex(),
+//                        extra.getText());
+//                break;
+//            case MERGE:
+//                log.info(
+//                        "额外信息是超链接,而且覆盖了一个区间,在firstRowIndex:{},firstColumnIndex;{},lastRowIndex:{},lastColumnIndex:{}",
+//                        extra.getFirstRowIndex(), extra.getFirstColumnIndex(), extra.getLastRowIndex(),
+//                        extra.getLastColumnIndex());
+//                break;
+//            default:
+//        }
     }
 
 

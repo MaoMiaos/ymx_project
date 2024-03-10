@@ -37,7 +37,6 @@ public class UserController {
         Optional<User> user1 = userService.check(user);
         user1.get().setPassword("canNotSee");
         return user1.orElse(user);
-
     }
 
 

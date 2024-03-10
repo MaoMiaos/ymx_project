@@ -49,6 +49,7 @@ public class AdminServiceImpl implements AdminService {
     private final TortGoodsRepository tortGoodsRepository;
     private final ForbidGoodsRepository forbidGoodsRepository;
     private final CheapGoodsRepository cheapGoodsRepository;
+    private final RepeatGoodsRepository repeatGoodsRepository;
 
     @Override
     public String upload(MultipartFile file, String fileName) throws IOException {
@@ -109,6 +110,13 @@ public class AdminServiceImpl implements AdminService {
                         .extraRead(CellExtraTypeEnum.HYPERLINK)
                         .headRowNumber(0)
                         .sheet().doRead();
+                break;
+            case "repeat":
+                EasyExcel.read(file.getInputStream(), RepeatGoods.class, new UploadRepeatGoodsDataListener(repeatGoodsRepository))
+                        .extraRead(CellExtraTypeEnum.HYPERLINK)
+                        .headRowNumber(0)
+                        .sheet().doRead();
+                break;
         }
         return fileName;
     }
@@ -159,6 +167,9 @@ public class AdminServiceImpl implements AdminService {
                     EasyExcel.write(response.getOutputStream(), CheapGoods.class).autoCloseStream(Boolean.FALSE).sheet("模板")
                             .doWrite(cheapGoodsRepository.findAll());
                     break;
+                case "repeat":
+                    EasyExcel.write(response.getOutputStream(), RepeatGoods.class).autoCloseStream(Boolean.FALSE).sheet("模板")
+                            .doWrite(repeatGoodsRepository.findAll());
             }
 
         } catch (Exception e) {
@@ -194,6 +205,8 @@ public class AdminServiceImpl implements AdminService {
                 return tortGoodsRepository.count();
             case "cheap":
                 return cheapGoodsRepository.count();
+            case "repeat":
+                return repeatGoodsRepository.count();
         }
         return 0L;
     }
@@ -283,6 +296,8 @@ public class AdminServiceImpl implements AdminService {
                 break;
             case "cheap":
                 cheapGoodsRepository.deleteAll();
+            case "repeat":
+                repeatGoodsRepository.deleteAll();
         }
     }
 

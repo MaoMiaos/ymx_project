@@ -6,6 +6,7 @@ import com.ymx_project.repository.UserRepository;
 import com.ymx_project.service.UserService;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
@@ -14,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-//    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public User readUserByUsername(String username){
         return userRepository.findByUsername(username).orElseThrow(EntityNotFoundException::new);
@@ -34,8 +35,8 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("User already registered. Please use different username.");
         }
         user.setUsername(userCreateRequest.getUsername());
-//        user.setPassword(bCryptPasswordEncoder.encode(userCreateRequest.getPassword()));
-        user.setPassword(userCreateRequest.getPassword());
+        user.setPassword(bCryptPasswordEncoder.encode(userCreateRequest.getPassword()));
+//        user.setPassword(userCreateRequest.getPassword());
         user.setRole(userCreateRequest.getRole());
         user.setName(userCreateRequest.getName());
         return userRepository.save(user);

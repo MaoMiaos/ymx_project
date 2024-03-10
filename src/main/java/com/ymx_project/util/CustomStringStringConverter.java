@@ -8,7 +8,7 @@ import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.write.handler.WriteHandler;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+//@Slf4j
 public class CustomStringStringConverter implements Converter<String> ,WriteHandler{
     @Override
     public Class<?> supportJavaTypeKey() {
@@ -29,7 +29,7 @@ public class CustomStringStringConverter implements Converter<String> ,WriteHand
     @Override
     public String convertToJavaData(ReadConverterContext<?> context) {
         // 检查单元格是否为超链接
-        log.info("demo:{}",context.getReadCellData().getType());
+//        log.info("demo:{}",context.getReadCellData().getType());
         // 如果不是超链接，返回null或者原始值
         return ""+context.getReadCellData().getStringValue();
     }

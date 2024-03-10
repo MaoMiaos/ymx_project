@@ -7,25 +7,19 @@ import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.excel.util.ListUtils;
 import com.alibaba.fastjson.JSON;
 
-import com.ymx_project.entity.AllTable;
+import com.ymx_project.entity.CommoditiesTable;
+import com.ymx_project.entity.RepeatGoods;
+import com.ymx_project.repository.RepeatGoodsRepository;
 
-
-import com.ymx_project.repository.AllTableRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.util.Assert;
 
 import java.util.Iterator;
 import java.util.List;
-
-/**
- * 模板的读取类
- *
- * @author Jiaju Zhuang
- */
-// 有个很重要的点 DemoDataListener 不能被spring管理，要每次读取excel都要new,然后里面用到spring可以构造方法传进去
 @Slf4j
-public class UploadAllTableDataListener implements ReadListener<AllTable> {
+@RequiredArgsConstructor
+public class UploadRepeatGoodsDataListener implements ReadListener<RepeatGoods> {
 
 
     private String asinToJavaData;
@@ -33,20 +27,20 @@ public class UploadAllTableDataListener implements ReadListener<AllTable> {
      * 每隔5条存储数据库，实际使用中可以100条，然后清理list ，方便内存回收
      */
     private static final int BATCH_COUNT = 100;
-    private List<AllTable> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+    private List<RepeatGoods> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
     /**
      * 假设这个是一个DAO，当然有业务逻辑这个也可以是一个service。当然如果不用存储这个对象没用。
      */
-    private AllTableRepository allTableRepository;
+    private RepeatGoodsRepository repeatGoodsRepository;
 
 
     /**
      * 如果使用了spring,请使用这个构造方法。每次创建Listener的时候需要把spring管理的类传进来
      *
-     * @param allTableRepository
+     * @param repeatGoodsRepository
      */
-    public UploadAllTableDataListener(AllTableRepository allTableRepository) {
-        this.allTableRepository = allTableRepository;
+    public UploadRepeatGoodsDataListener(RepeatGoodsRepository repeatGoodsRepository) {
+        this.repeatGoodsRepository = repeatGoodsRepository;
     }
 
     /**
@@ -56,14 +50,13 @@ public class UploadAllTableDataListener implements ReadListener<AllTable> {
      * @param context
      */
     @Override
-    public void invoke(AllTable data, AnalysisContext context) {
+    public void invoke(RepeatGoods data, AnalysisContext context) {
 //        String data1 = JSON.toJSONString(data);
 //        log.info("解析到一条数据:{}", data1);
         cachedDataList.add(data);
         // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
         if (cachedDataList.size() >= BATCH_COUNT) {
             saveData();
-
             // 存储完成清理 list
             cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
         }
@@ -83,17 +76,18 @@ public class UploadAllTableDataListener implements ReadListener<AllTable> {
     }
 
     /**
-     * 加上存储数据库
+     * 与数据库对比
      */
     private void saveData() {
-//        log.info("{}条数据，开始存储数据库！", cachedDataList.size());
-        Iterator<AllTable> it = cachedDataList.iterator();
+//        log.info("读取到{}条数据", cachedDataList.size());
+        Iterator<RepeatGoods> it = cachedDataList.iterator();
         while(it.hasNext()) {
-            AllTable allTable = it.next();
-            allTable.setAsinLink(asinToJavaData);
-            allTableRepository.save(allTable);
+            RepeatGoods repeatGoods = it.next();
+            repeatGoods.setAsinLink(asinToJavaData);
+            repeatGoodsRepository.save(repeatGoods);
+
         }
-//        log.info("存储数据库成功！");
+        log.info("读取成功！");
     }
 
     @Override

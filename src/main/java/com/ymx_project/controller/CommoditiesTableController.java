@@ -21,7 +21,7 @@ import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.List;
 
-@Slf4j
+//@Slf4j
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
@@ -51,14 +51,14 @@ public class CommoditiesTableController {
 
     @PostMapping("my_commodities")
     List<StaffGoods> getMyCommodities(@RequestBody UserIdRequest userIdRequest){
-        log.info("{}messagea",userIdRequest.getUserId());
+//        log.info("{}messagea",userIdRequest.getUserId());
         return staffGoodsService.findAllByUserId(userIdRequest.getUserId());
     }
 
     // TODO: 3/2/2024 增加一个超链接到表中 
     @GetMapping("out_myCommodities")
     public void out_commodities(HttpServletResponse response,@RequestParam("userId") String userId) throws IOException, ParseException {
-        log.info("{}userid",userId);
+//        log.info("{}userid",userId);
         String username =  userRepository.findUsernameById(userId);
         // 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");

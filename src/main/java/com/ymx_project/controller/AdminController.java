@@ -24,7 +24,7 @@ import java.io.IOException;
 @RequestMapping("admin")
 @CrossOrigin
 @RequiredArgsConstructor
-@Slf4j
+//@Slf4j
 @ResponseBody
 public class AdminController {
 

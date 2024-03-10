@@ -55,12 +55,13 @@ public class UploadStaffGoodsDataLitener implements ReadListener<StaffGoods> {
      */
     @Override
     public void invoke(StaffGoods data, AnalysisContext context) {
-        String data1 = JSON.toJSONString(data);
-        log.info("解析到一条数据:{}", data1);
+//        String data1 = JSON.toJSONString(data);
+//        log.info("解析到一条数据:{}", data1);
         cachedDataList.add(data);
         // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
         if (cachedDataList.size() >= BATCH_COUNT) {
             saveData();
+            cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
             // 存储完成清理 list
         }
     }
@@ -74,6 +75,7 @@ public class UploadStaffGoodsDataLitener implements ReadListener<StaffGoods> {
     public void doAfterAllAnalysed(AnalysisContext context) {
         // 这里也要保存数据，确保最后遗留的数据也存储到数据库
         saveData();
+        cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
         log.info("所有数据解析完成！");
     }
 
@@ -81,7 +83,7 @@ public class UploadStaffGoodsDataLitener implements ReadListener<StaffGoods> {
      * 加上存储数据库
      */
     private void saveData() {
-        log.info("{}条数据，开始存储数据库！", cachedDataList.size());
+//        log.info("{}条数据，开始存储数据库！", cachedDataList.size());
         Iterator<StaffGoods> it = cachedDataList.iterator();
         while(it.hasNext()) {
             StaffGoods reSelect = it.next();
@@ -93,32 +95,32 @@ public class UploadStaffGoodsDataLitener implements ReadListener<StaffGoods> {
 
     @Override
     public void extra(CellExtra extra, AnalysisContext context) {
-        if (extra.getType() == CellExtraTypeEnum.HYPERLINK){
-            log.info("在extra读取到了一条额外信息:{}", JSON.toJSONString(context));
-            log.info("在extra读取到了一条额外信息:{}", JSON.toJSONString(extra));
-            asinToJavaData = extra.getText();
-            if (extra.getText().contains("http")) {
-                log.info("额外信息是ASIN超链接,在rowIndex:{},columnIndex;{},内容是:{}", extra.getRowIndex(),
-                        extra.getColumnIndex(), extra.getText());
-
-            } else if ("Sheet2!A1".equals(extra.getText())) {
-                log.info(
-                        "额外信息是超链接,而且覆盖了一个区间,在firstRowIndex:{},firstColumnIndex;{},lastRowIndex:{},lastColumnIndex:{},"
-                                + "内容是:{}",
-                        extra.getFirstRowIndex(), extra.getFirstColumnIndex(), extra.getLastRowIndex(),
-                        extra.getLastColumnIndex(), extra.getText());
-            } else {
-                Assert.hasLength("Unknown hyperlink!");
-            }
-        }else if(extra.getType() == CellExtraTypeEnum.COMMENT){
-            log.info("额外信息是批注,在rowIndex:{},columnIndex;{},内容是:{}", extra.getRowIndex(), extra.getColumnIndex(),
-                    extra.getText());
-        }else if(extra.getType() == CellExtraTypeEnum.MERGE){
-            log.info(
-                    "额外信息是MERGE,而且覆盖了一个区间,在firstRowIndex:{},firstColumnIndex;{},lastRowIndex:{},lastColumnIndex:{}",
-                    extra.getFirstRowIndex(), extra.getFirstColumnIndex(), extra.getLastRowIndex(),
-                    extra.getLastColumnIndex());
-        }
+//        if (extra.getType() == CellExtraTypeEnum.HYPERLINK){
+//            log.info("在extra读取到了一条额外信息:{}", JSON.toJSONString(context));
+//            log.info("在extra读取到了一条额外信息:{}", JSON.toJSONString(extra));
+//            asinToJavaData = extra.getText();
+//            if (extra.getText().contains("http")) {
+//                log.info("额外信息是ASIN超链接,在rowIndex:{},columnIndex;{},内容是:{}", extra.getRowIndex(),
+//                        extra.getColumnIndex(), extra.getText());
+//
+//            } else if ("Sheet2!A1".equals(extra.getText())) {
+//                log.info(
+//                        "额外信息是超链接,而且覆盖了一个区间,在firstRowIndex:{},firstColumnIndex;{},lastRowIndex:{},lastColumnIndex:{},"
+//                                + "内容是:{}",
+//                        extra.getFirstRowIndex(), extra.getFirstColumnIndex(), extra.getLastRowIndex(),
+//                        extra.getLastColumnIndex(), extra.getText());
+//            } else {
+//                Assert.hasLength("Unknown hyperlink!");
+//            }
+//        }else if(extra.getType() == CellExtraTypeEnum.COMMENT){
+//            log.info("额外信息是批注,在rowIndex:{},columnIndex;{},内容是:{}", extra.getRowIndex(), extra.getColumnIndex(),
+//                    extra.getText());
+//        }else if(extra.getType() == CellExtraTypeEnum.MERGE){
+//            log.info(
+//                    "额外信息是MERGE,而且覆盖了一个区间,在firstRowIndex:{},firstColumnIndex;{},lastRowIndex:{},lastColumnIndex:{}",
+//                    extra.getFirstRowIndex(), extra.getFirstColumnIndex(), extra.getLastRowIndex(),
+//                    extra.getLastColumnIndex());
+//        }
     }
 
 

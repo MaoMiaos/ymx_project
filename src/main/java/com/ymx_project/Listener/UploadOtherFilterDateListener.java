@@ -73,6 +73,7 @@ public class UploadOtherFilterDateListener implements ReadListener<FilterDataDto
         if (cachedDataList.size() >= BATCH_COUNT) {
             saveData();
             // 存储完成清理 list
+            cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
         }
     }
 
@@ -85,6 +86,7 @@ public class UploadOtherFilterDateListener implements ReadListener<FilterDataDto
     public void doAfterAllAnalysed(AnalysisContext context) {
         // 这里也要保存数据，确保最后遗留的数据也存储到数据库
         saveData();
+        cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
         log.info("所有数据解析完成！");
     }
 

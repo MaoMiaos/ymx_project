@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
+//@Slf4j
 public class CommoditiesTableServiceImpl implements CommoditiesTableService {
     private final CommoditiesTableRepository commoditiesTableRepository;
 
@@ -32,6 +32,9 @@ public class CommoditiesTableServiceImpl implements CommoditiesTableService {
     private final RemoveBRepository removeBRepository;
 
     private final CheapGoodsRepository cheapGoodsRepository;
+
+    private final RepeatGoodsRepository repeatGoodsRepository;
+
     @Override
     public CommoditiesTable getRandomData(String userId) {
         CommoditiesTable commoditiesTable =commoditiesTableRepository.firstFindRandom(userId);
@@ -151,6 +154,20 @@ public class CommoditiesTableServiceImpl implements CommoditiesTableService {
                 cheapGoods.setPicture_link(commoditiesTableRequest.getPic_link());
                 commoditiesTableRepository.deleteByASIN(commoditiesTableRequest.getASIN());
                 cheapGoodsRepository.save(cheapGoods);
+                break;
+            case "repeat":
+                RepeatGoods repeatGoods = new RepeatGoods();
+                repeatGoods.setAsin(commoditiesTableRequest.getASIN());
+                repeatGoods.setBrand(commoditiesTableRequest.getBrand());
+                repeatGoods.setAsinLink(commoditiesTableRequest.getASIN_link());
+                repeatGoods.setGoodsCount(commoditiesTableRequest.getGoods_count());
+                repeatGoods.setCreateData(time);
+                repeatGoods.setFbaValue(commoditiesTableRequest.getFBA_value());
+                repeatGoods.setHeight(commoditiesTableRequest.getHeight());
+                repeatGoods.setPrice(commoditiesTableRequest.getPrice());
+                repeatGoods.setPicture_link(commoditiesTableRequest.getPic_link());
+                commoditiesTableRepository.deleteByASIN(commoditiesTableRequest.getASIN());
+                repeatGoodsRepository.save(repeatGoods);
             default:
         }
 
