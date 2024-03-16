@@ -1,13 +1,12 @@
 package com.ymx_project.controller;
 
 import com.ymx_project.entity.User;
-import com.ymx_project.entity.request.UserCreateRequest;
+import com.ymx_project.request.UserCreateRequest;
 import com.ymx_project.repository.AdminRepository;
 import com.ymx_project.repository.UserRepository;
 import com.ymx_project.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;

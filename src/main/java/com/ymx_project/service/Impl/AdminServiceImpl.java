@@ -6,12 +6,12 @@ import com.alibaba.excel.util.MapUtils;
 import com.alibaba.fastjson.JSON;
 import com.ymx_project.Listener.*;
 import com.ymx_project.entity.*;
-import com.ymx_project.entity.request.FilterDataDto;
-import com.ymx_project.entity.request.UserCreateRequest;
 import com.ymx_project.repository.*;
 import com.ymx_project.service.AdminService;
+import com.ymx_project.request.UserCreateRequest;
+import com.ymx_project.service.ExcelReaderService;
 import lombok.RequiredArgsConstructor;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,8 +26,8 @@ import java.util.Optional;
 public class AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
-//    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Override
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+//    @Override
     public Admin create(UserCreateRequest userCreateRequest) {
         Admin admin = new Admin();
         Optional<Admin> byUsername = adminRepository.findByUsername(userCreateRequest.getUsername());
@@ -35,8 +35,8 @@ public class AdminServiceImpl implements AdminService {
             throw new RuntimeException("User already registered. Please use different username.");
         }
         admin.setUsername(userCreateRequest.getUsername());
-        admin.setPassword(userCreateRequest.getPassword());
-//        admin.setPassword(bCryptPasswordEncoder.encode(userCreateRequest.getPassword()));
+//        admin.setPassword(userCreateRequest.getPassword());
+        admin.setPassword(bCryptPasswordEncoder.encode(userCreateRequest.getPassword()));
         return adminRepository.save(admin);
     }
 
@@ -50,7 +50,7 @@ public class AdminServiceImpl implements AdminService {
     private final ForbidGoodsRepository forbidGoodsRepository;
     private final CheapGoodsRepository cheapGoodsRepository;
     private final RepeatGoodsRepository repeatGoodsRepository;
-
+    private final ExcelReaderService excelReaderService;
     @Override
     public String upload(MultipartFile file, String fileName) throws IOException {
         if (file == null) {
@@ -58,60 +58,34 @@ public class AdminServiceImpl implements AdminService {
         }
         switch (fileName) {
             case "all_table":
-                EasyExcel.read(file.getInputStream(), AllTable.class, new UploadAllTableDataListener(allTableRepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.readExcelFile(file,AllTable.class, new UploadAllTableDataListener(allTableRepository));
                 break;
             case "remove_a":
-                EasyExcel.read(file.getInputStream(), RemoveA.class, new UploadRemoveADataListener(removeARepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.readExcelFile(file,RemoveA.class, new UploadRemoveADataListener(removeARepository));
                 break;
             case "remove_b":
-                EasyExcel.read(file.getInputStream(), RemoveB.class, new UploadRemoveBDataListener(removeBRepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.readExcelFile(file,RemoveB.class, new UploadRemoveBDataListener(removeBRepository));
                 break;
             case "re_select":
-                EasyExcel.read(file.getInputStream(), ReSelect.class, new UploadReSelectDataListener(reSelectRepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.readExcelFile(file,ReSelect.class, new UploadReSelectDataListener(reSelectRepository));
                 break;
             case "commodities_table":
-                EasyExcel.read(file.getInputStream(), CommoditiesTable.class, new UploadCommoditiesTableDataListener(commoditiesTableRepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.readExcelFile(file,CommoditiesTable.class, new UploadCommoditiesTableDataListener(commoditiesTableRepository));
                 break;
             case "new_commodities":
-                EasyExcel.read(file.getInputStream(), NewCommodities.class, new UploadNewCommoditiesDataListener(newCommoditiesRepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.readExcelFile(file,NewCommodities.class, new UploadNewCommoditiesDataListener(newCommoditiesRepository));
                 break;
             case "forbid_goods":
-                EasyExcel.read(file.getInputStream(), ForbidGoods.class, new UploadForbidGoodsDataListener(forbidGoodsRepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.readExcelFile(file,ForbidGoods.class, new UploadForbidGoodsDataListener(forbidGoodsRepository));
                 break;
             case "tort_goods":
-                EasyExcel.read(file.getInputStream(), TortGoods.class, new UploadTortGoodsDataListener(tortGoodsRepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.readExcelFile(file,TortGoods.class, new UploadTortGoodsDataListener(tortGoodsRepository));
                 break;
             case "cheap":
-                EasyExcel.read(file.getInputStream(), CheapGoods.class, new UploadCheapGoodsDataListener(cheapGoodsRepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.readExcelFile(file,CheapGoods.class, new UploadCheapGoodsDataListener(cheapGoodsRepository));
                 break;
             case "repeat":
+                excelReaderService.readExcelFile(file,RepeatGoods.class, new UploadRepeatGoodsDataListener(repeatGoodsRepository));
                 EasyExcel.read(file.getInputStream(), RepeatGoods.class, new UploadRepeatGoodsDataListener(repeatGoodsRepository))
                         .extraRead(CellExtraTypeEnum.HYPERLINK)
                         .headRowNumber(0)
@@ -216,52 +190,28 @@ public class AdminServiceImpl implements AdminService {
         switch (tableName) {
             // 这里需要设置不关闭流
             case "all_table":
-                EasyExcel.read(file.getInputStream(), AllTable.class, new UploadAllTableDataListener(allTableRepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.writeExcelFile(file,AllTable.class, new UploadAllTableDataListener(allTableRepository));
                 break;
             case "remove_a":
-                EasyExcel.read(file.getInputStream(), RemoveA.class, new UploadRemoveADataListener(removeARepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.writeExcelFile(file,RemoveA.class, new UploadRemoveADataListener(removeARepository));
                 break;
             case "remove_b":
-                EasyExcel.read(file.getInputStream(), RemoveB.class, new UploadRemoveBDataListener(removeBRepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.writeExcelFile(file,RemoveB.class, new UploadRemoveBDataListener(removeBRepository));
                 break;
             case "re_select":
-                EasyExcel.read(file.getInputStream(), ReSelect.class, new UploadReSelectDataListener(reSelectRepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.writeExcelFile(file,ReSelect.class, new UploadReSelectDataListener(reSelectRepository));
                 break;
             case "commodities_table":
-                EasyExcel.read(file.getInputStream(), CommoditiesTable.class, new UploadCommoditiesTableDataListener(commoditiesTableRepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.writeExcelFile(file,CommoditiesTable.class, new UploadCommoditiesTableDataListener(commoditiesTableRepository));
                 break;
             case "new_commodities":
-                EasyExcel.read(file.getInputStream(), NewCommodities.class, new UploadNewCommoditiesDataListener(newCommoditiesRepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.writeExcelFile(file,NewCommodities.class, new UploadNewCommoditiesDataListener(newCommoditiesRepository));
                 break;
             case "forbid_goods":
-                EasyExcel.read(file.getInputStream(), FilterDataDto.class, new UploadRemoveBFilterDateListener(forbidGoodsRepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.writeExcelFile(file,ForbidGoods.class, new UploadForbidGoodsDataListener(forbidGoodsRepository));
                 break;
             case "tort_goods":
-                EasyExcel.read(file.getInputStream(), TortGoods.class, new UploadTortGoodsDataListener(tortGoodsRepository))
-                        .extraRead(CellExtraTypeEnum.HYPERLINK)
-                        .headRowNumber(0)
-                        .sheet().doRead();
+                excelReaderService.writeExcelFile(file,TortGoods.class, new UploadTortGoodsDataListener(tortGoodsRepository));
                 break;
         }
     }

@@ -9,10 +9,9 @@ import com.alibaba.fastjson.JSON;
 
 
 
-import com.ymx_project.entity.request.FilterDataDto;
+import com.ymx_project.dto.FilterDataDto;
 
 import com.ymx_project.repository.*;
-import com.ymx_project.util.FilterData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

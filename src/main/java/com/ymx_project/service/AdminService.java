@@ -1,7 +1,7 @@
 package com.ymx_project.service;
 
 import com.ymx_project.entity.Admin;
-import com.ymx_project.entity.request.UserCreateRequest;
+import com.ymx_project.request.UserCreateRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

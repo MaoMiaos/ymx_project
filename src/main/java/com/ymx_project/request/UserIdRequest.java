@@ -1,4 +1,4 @@
-package com.ymx_project.entity.request;
+package com.ymx_project.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

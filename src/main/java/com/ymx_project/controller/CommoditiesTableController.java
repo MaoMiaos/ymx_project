@@ -4,14 +4,12 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.enums.CellExtraTypeEnum;
 import com.ymx_project.Listener.UploadCommoditiesTableDataListener;
 import com.ymx_project.entity.*;
-import com.ymx_project.entity.request.CommoditiesTableRequest;
-import com.ymx_project.entity.request.TableNameRequest;
-import com.ymx_project.entity.request.UserIdRequest;
+import com.ymx_project.request.CommoditiesTableRequest;
+import com.ymx_project.request.UserIdRequest;
 import com.ymx_project.repository.*;
 import com.ymx_project.service.CommoditiesTableService;
 import com.ymx_project.service.StaffGoodsService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -1,7 +1,9 @@
-package com.ymx_project.entity.request;
+package com.ymx_project.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+
+import java.util.Date;
 
 @Data
 public class CommoditiesTableRequest {
@@ -34,5 +36,7 @@ public class CommoditiesTableRequest {
     private String type;
     @JsonProperty(value = "userId")
     private String User_id;
+
+    private Date CreateData;
 }
 
